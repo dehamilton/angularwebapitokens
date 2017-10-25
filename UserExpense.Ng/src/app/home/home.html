@@ -1,0 +1,81 @@
+<div class="container">
+
+  <div ng-include="'components/navbar/navbar.html'"></div>
+
+  <div class="jumbotron">
+      
+    
+    <div class="panel panel-primary">
+        <div class="panel-heading clearfix">
+            <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Expenses</h4>
+            <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default btn-xs" ng-click="openModal('lg');">Add New Expense</button>
+            </div>
+        </div>
+        <div class="panel-body">
+              Welcome to the User Expense system. Please review your existing expenses and create any new expenses by clicking the button above.
+          </div>
+          <input type="text" ng-model="gridFilter" placeholder="Search Expenses" style="padding-left: 10px; margin-left: 15px;">
+        <hr/>
+            <div ui-grid="gridOptions" class="myGrid text-center"></div>
+          
+        
+    </div>
+  </div>
+
+  <hr>
+</div>
+
+<script type="text/ng-template" id="newExpense.html">
+    <div class="modal-header">
+        <h3 class="modal-title">Enter Expense Data</h3>
+    </div>
+    <div class="modal-body">
+        <form novalidate name="expenseForm">
+          <div class="form-group">
+            <label for="dateInput">Date</label>
+            <div class="row">
+            <div class="col-md-6">
+                <p class="input-group">
+                    <input type="text" class="form-control" ng-blur="blurValidator('date')" datepicker-popup="MM/dd/yyyy" ng-model="expense.ExpenseDate" is-open="opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" name="Date" required />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openDateControl($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+                <p ng-show="dateSkipped && dateIsInValid()" style="color: red;">Valid Expense Date is required.</p>
+            </div>
+        </div>
+          </div>
+          <div class="form-group">
+            <label for="descriptionInput">Description</label>
+              <input type="text" class="form-control" ng-blur="blurValidator('desc')" ng-model="expense.Description" id="description" placeholder="Enter Description" maxlength="40" ng-maxlength="40" name="Description" required>
+            <p ng-show="expenseForm.Description.$invalid && descSkipped" style="color: red;">Description is required.</p>
+          </div>
+          <div class="form-group">
+            <label for="categoryInput">Category</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <input type="text" ng-model="expense.Category" ng-blur="blurValidator('cat')" placeholder="Enter Category" typeahead="category for category in getCategory($viewValue)" typeahead-wait-ms="300" class="form-control" maxlength="20" ng-maxlength="40" name="Category" required>
+                    <p ng-show="expenseForm.Category.$invalid && catSkipped" style="color: red;">Category is required.</p>
+                </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="amountInput">Amount</label>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group">
+                      <div class="input-group-addon">$</div>
+                        <input type="text" class="form-control" ng-blur="blurValidator('amount')" ng-model="expense.Amount" id="amount" placeholder="Amount" name="Amount" required>
+                    </div>
+                    <p ng-show="expenseForm.Amount.$invalid && amountSkipped" style="color: red;">Amount is required.</p>
+                </div>
+            </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="save()" ng-disabled="expenseForm.$invalid">Save</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    </div>
+</script>
